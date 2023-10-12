@@ -74,7 +74,7 @@ class LLM:
         if user_input[-1] not in punctuation:
             user_input += "."
         
-        refined_query = self.backend_model([SystemMessage(content=self.refinement_template), HumanMessage(content=user_input)]).content
+        refined_query = self.backend_model(self.conversation_history[-(self.memory_length*2):] + [SystemMessage(content=self.refinement_template), HumanMessage(content=user_input)]).content
         book_list = ""
         if "NO QUERY" not in refined_query:
             book_list = '-----\n'.join(get_relevant_books(refined_query, 5))
